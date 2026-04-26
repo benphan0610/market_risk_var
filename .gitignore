@@ -4,7 +4,8 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Raw data — only commit processed
-data/raw/
+data/raw/*
+!data/raw/.gitkeep
 
 # Generated outputs
 *.html
