@@ -1,0 +1,22 @@
+# Python cache
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Raw data — only commit processed
+data/raw/
+
+# Generated outputs
+*.html
+results/plots/*.png
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Conda
+.conda/
