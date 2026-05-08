@@ -1,23 +1,34 @@
-# Python cache
 __pycache__/
-*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+.venv/
+venv/
+env/
+
 .ipynb_checkpoints/
 
-# Raw data — only commit processed
 data/raw/*
+data/processed/*
 !data/raw/.gitkeep
+!data/processed/.gitkeep
 
-# Generated outputs
-*.html
-results/plots/*.png
+.pytest_cache/
 
-# IDE
-.vscode/
-.idea/
+build/
+dist/
+*.egg-info/
 
-# OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Conda
-.conda/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+.env
+*.env
