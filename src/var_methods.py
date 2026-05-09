@@ -4,12 +4,15 @@ from scipy import stats
 
 from src.config import BACKTEST_WINDOW_DAYS, RANDOM_SEED
 
+# Historical Simluation: no distributional assumption
+# The negative sign converts the tail into a positive loss number
 def historical_var(returns_window, level):
     var = -np.quantile(returns_window, 1- level)
-    bad_returns = returns_window[returns_window <= -var]
+    bad_returns = returns_window[returns_window <= -var]        # Picks out returns that are at or worse than -VaR
     es = -bad_returns.mean()
     return var, es
 
+# Prametric VaR assuming returns follows Normal(mu, sigma)
 def normal_var(returns_window, level):
     mu = returns_window.mean()
     sigma = returns_window.std()
@@ -18,6 +21,7 @@ def normal_var(returns_window, level):
     es = -mu + sigma*stats.norm.pdf(z)/(1-level)
     return var, es
 
+# Student-t MLE on the window
 def student_t_var(returns_window, level):
     df, loc, scale = stats.t.fit(returns_window)
     z_t = stats.t.ppf(1-level, df)
@@ -27,6 +31,7 @@ def student_t_var(returns_window, level):
     es = -loc + scale * pdf_at_z_t / (1-level) * es_factor
     return var, es
 
+# Bootstrap-style Monte Carlo
 def monte_carlo_var(returns_window, level, n_simulations = 10000):
     rng = np.random.default_rng(seed = RANDOM_SEED)
     simulations = rng.choice(returns_window, size = n_simulations, replace = True)

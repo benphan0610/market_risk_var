@@ -29,14 +29,14 @@ INDIA_TICKERS = [
 ]
 
 # === VaR / backtesting parameters ===
-VAR_LEVELS = [0.95, 0.99]
-BACKTEST_WINDOW_DAYS = 252
-MIN_HISTORY_DAYS = 2000  # tickers with fewer trading days get dropped
+VAR_LEVELS = [0.95, 0.99]       # confidence levels run for every method
+BACKTEST_WINDOW_DAYS = 252      # 252 trading days
+MIN_HISTORY_DAYS = 2000         # tickers with fewer trading days get dropped
 
 
 # === GARCH parameters ===
-GARCH_WARMUP = 500
-GARCH_REFIT_INTERVAL = 21
+GARCH_WARMUP = 500              # initial window before first forecast
+GARCH_REFIT_INTERVAL = 21       # re-fit parameters every 21 trading days
 
 # === Monte Carlo ===
 MC_N_SIMULATIONS = 10000
@@ -44,9 +44,9 @@ RANDOM_SEED = 45
 
 # === Stress windows ===
 STRESS_WINDOWS = {
-    "COVID_2020": ("2020-02-15", "2020-04-15", "both"),
-    "CHINA-2015": ("2015-08-01", "2015-09-30", "both"),
-    "Volmageddon_2018": ("2018-02-01", "2018-02-15", "US"),
+    "COVID_2020": ("2020-02-15", "2020-04-15", "both"),             # gradual buildup -> sharp crash
+    "CHINA_2015": ("2015-08-01", "2015-09-30", "both"),             # devaluation shock
+    "Volmageddon_2018": ("2018-02-01", "2018-02-15", "US"),         # single-day shock with no buildup
 }
 
 HYPOTHETICAL_SHOCK = -0.10

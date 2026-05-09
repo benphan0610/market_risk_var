@@ -2,7 +2,7 @@
 
 ## Project Motivation
 
-This project started from a question: do standard market-risk methods behave differently on developed and emerging market equities?
+This project started from a question: **Do standard market-risk methods behave differently on developed and emerging market equities?**
 
 To explore this, I built two equal-weighted equity portfolios: 30 US large caps from the S&P 500 and 30 components of the India NIFTY 50 and applied six Value-at-Risk (VaR) and Expected Shortfall (ES) methods to each, covering the period from January 2010 through April 2026.
 
@@ -35,17 +35,17 @@ To explore this, I built two equal-weighted equity portfolios: 30 US large caps 
 
 The project is structured as six notebooks that run in order. Each notebook reads its input data from `data/processed/` and writes its output back to the same location, so any single notebook can be re-run independently as long as its upstream dependencies are present.
 
-**Notebook 01 — Data and returns.** Downloads daily close prices from yfinance for both ticker lists, computes log returns, drops tickers with insufficient history, and constructs equal-weighted daily portfolios with daily rebalancing.
+**Notebook 01 - Data and returns.** Downloads daily close prices from yfinance for both ticker lists, computes log returns, drops tickers with insufficient history, and constructs equal-weighted daily portfolios with daily rebalancing.
 
-**Notebook 02 — Static VaR methods.** Computes Historical Simulation, Normal, Student's t, and Monte Carlo VaR/ES on a 252-day rolling window for each portfolio at the 95% and 99% confidence levels.
+**Notebook 02 - Static VaR methods.** Computes Historical Simulation, Normal, Student's t, and Monte Carlo VaR/ES on a 252-day rolling window for each portfolio at the 95% and 99% confidence levels.
 
-**Notebook 03 — Conditional VaR methods.** Fits GARCH(1,1) and GJR-GARCH(1,1) models with a 500-day initial training window and refits every 21 days. Variance forecasts are converted to VaR/ES assuming Normal innovations.
+**Notebook 03 - Conditional VaR methods.** Fits GARCH(1,1) and GJR-GARCH(1,1) models with a 500-day initial training window and refits every 21 days. Variance forecasts are converted to VaR/ES assuming Normal innovations.
 
-**Notebook 04 — Backtesting.** Counts violation days, runs the Kupiec unconditional coverage test and the Christoffersen independence test on each method, and applies the Diebold-Mariano test to compare selected method pairs.
+**Notebook 04 - Backtesting.** Counts violation days, runs the Kupiec unconditional coverage test and the Christoffersen independence test on each method, and applies the Diebold-Mariano test to compare selected method pairs.
 
-**Notebook 05 — Stress testing.** Slices the VaR series into three crisis windows and computes per-window violation counts, total breach magnitude, worst single-day breach ratio, and worst observed return. Also reports a hypothetical −10% shock breach ratio against each method's most recent VaR forecast.
+**Notebook 05 - Stress testing.** Slices the VaR series into three crisis windows and computes per-window violation counts, total breach magnitude, worst single-day breach ratio, and worst observed return. Also reports a hypothetical −10% shock breach ratio against each method's most recent VaR forecast.
 
-**Notebook 06 — Dashboard.** Combines the returns + VaR chart, backtest summary, and stress test breach ratios into a single self-contained interactive HTML file using Plotly.
+**Notebook 06 - Dashboard.** Combines the returns + VaR chart, backtest summary, and stress test breach ratios into a single self-contained interactive HTML file using Plotly.
 
 All numerical work lives in `src/` modules. The notebooks import from `src/`, pass data between steps, and save artifacts. Tests for the modules are in `tests/`.
 
@@ -62,7 +62,7 @@ Even GARCH and GJR-GARCH fail at 99%. Both models adapt their volatility forecas
 
 **2. GARCH works during gradual buildups but not during sudden shocks**
 
-During COVID 2020 on the US portfolio, GARCH and GJR-GARCH performed much better than static methods. Their worst breach ratios were 3.1 and 3.0, compared to Historical Simulation at 6.9 and Normal at 5.8. By the worst day of the crash, GARCH had been seeing rising volatility for several weeks. 
+During COVID 2020 on the US portfolio, GARCH and GJR-GARCH performed much better than static methods compared to Historical Simulation and Normal. By the worst day of the crash, GARCH had been seeing rising volatility for several weeks. 
 
 For Volmageddon 2018, it was the opposite. The S&P 500 dropped about 4% on February 5 with no warning. The day before was an ordinary trading day. With no buildup, GARCH had nothing to adapt to. Its worst breach ratio was 3.6, still better than Historical's 8.3, but not by the same margin we saw in COVID.
 
@@ -76,9 +76,9 @@ GARCH should handle clustering by design but why does it still fail? I believe t
 
 I did multiple methods because I want to study how differ they are on different type of markets. India GARCH at 95% passed Kupiec with a 4.64% violation rate. US GARCH at 95% also passed at 5.31%. At 99%, the US Normal violation rate at 2.5% is worse than India's at 2.0%.
 
-I also did the Diebold-Mariano test. On India, GARCH significantly beats Historical (DM = 2.47, p = 0.013). On US, the same comparison is not statistically significant (DM = -1.34, p = 0.18). A possible explanation is that India's portfolio has lower volatility and lower kurtosis than the US portfolio, so distributional assumptions misspecify the US tails more severely. Isn't that emerging market should be more volatile than developed market? I am still looking for the reason...
+I also did the Diebold-Mariano test. On India, GARCH significantly beats Historical. On US, the same comparison is not statistically significant. A possible explanation is that India's portfolio has lower volatility and lower kurtosis than the US portfolio, so distributional assumptions misspecify the US tails more severely. 
 
-GJR-GARCH was expected to beat vanilla GARCH because it captures the leverage effect. On the US market, this held weakly. On India market, GJR actually underperformed GARCH significantly (DM = -3.46, p < 0.001). I believe the reason is not from the data alone but also because of the differences in the market structure and other factors.
+GJR-GARCH was expected to beat vanilla GARCH because it captures the leverage effect. On the US market, this held weakly. On India market, GJR actually underperformed GARCH significantly. I believe the reason is not from the data alone but also because of the differences in the market structure and other factors.
 
 
 ## Assumptions
@@ -122,7 +122,7 @@ Selected to span different types of shocks: a sustained crisis with gradual buil
 Clone the repository, then from the project root:
 
 ```bash
-conda create -n market-risk python=3.12 -y
+conda create -n market-risk python=3.14 -y
 conda activate market-risk
 pip install -r requirements.txt
 ```
@@ -138,7 +138,7 @@ jupyter notebook
 Then run, in this order:
 
 1. `notebooks/01_data_and_returns.ipynb` 
-2. `notebooks/02_var_methods_static.ipynb` - This note takes a long time to load because it will have to compute various methods (est. 25-30min)
+2. `notebooks/02_var_methods_static.ipynb`
 3. `notebooks/03_var_methods_garch.ipynb` 
 4. `notebooks/04_backtesting.ipynb` 
 5. `notebooks/05_stress_testing.ipynb`
@@ -200,14 +200,14 @@ market_risk_var/
 The methods implemented in this project come from the following sources:
 
 **Backtesting:**
-- Kupiec, P.H. (1995). "Techniques for Verifying the Accuracy of Risk Measurement Models." *Journal of Derivatives*, 3(2), 73–84.
-- Christoffersen, P.F. (1998). "Evaluating Interval Forecasts." *International Economic Review*, 39(4), 841–862.
-- Diebold, F.X. and Mariano, R.S. (1995). "Comparing Predictive Accuracy." *Journal of Business & Economic Statistics*, 13(3), 253–263.
+- Kupiec, P.H. (1995). "Techniques for Verifying the Accuracy of Risk Measurement Models." *Journal of Derivatives*, 3(2), 73-84.
+- Christoffersen, P.F. (1998). "Evaluating Interval Forecasts." *International Economic Review*, 39(4), 841-862.
+- Diebold, F.X. and Mariano, R.S. (1995). "Comparing Predictive Accuracy." *Journal of Business & Economic Statistics*, 13(3), 253-263.
 
 **Volatility models:**
-- Engle, R.F. (1982). "Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation." *Econometrica*, 50(4), 987–1007.
-- Bollerslev, T. (1986). "Generalized Autoregressive Conditional Heteroskedasticity." *Journal of Econometrics*, 31(3), 307–327.
-- Glosten, L.R., Jagannathan, R., and Runkle, D.E. (1993). "On the Relation between the Expected Value and the Volatility of the Nominal Excess Return on Stocks." *Journal of Finance*, 48(5), 1779–1801.
+- Engle, R.F. (1982). "Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation." *Econometrica*, 50(4), 987-1007.
+- Bollerslev, T. (1986). "Generalized Autoregressive Conditional Heteroskedasticity." *Journal of Econometrics*, 31(3), 307-327.
+- Glosten, L.R., Jagannathan, R., and Runkle, D.E. (1993). "On the Relation between the Expected Value and the Volatility of the Nominal Excess Return on Stocks." *Journal of Finance*, 48(5), 1779-1801.
 
 **Implementation libraries:**
 - Sheppard, K. (2024). `arch`: Autoregressive Conditional Heteroskedasticity (ARCH) and other tools for financial econometrics, written in Python. Available at https://arch.readthedocs.io

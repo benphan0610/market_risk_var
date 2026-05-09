@@ -7,6 +7,7 @@ def count_violations(returns, var_series):
     aligned.columns = ["ret", "var"]
     return (aligned["ret"] < -aligned["var"]).astype(int)
 
+
 def kupiec_test(violations, alpha):
     n = len(violations)
     x = violations.sum()
@@ -21,6 +22,7 @@ def kupiec_test(violations, alpha):
     
     p_value = 1 - stats.chi2.cdf(lr_stat, df=1)
     return p_value, x, n
+
 
 def christoffersen_test(violations):
     v = violations.values
@@ -49,6 +51,7 @@ def christoffersen_test(violations):
     p_value = 1 - stats.chi2.cdf(lr_stat, df=1)
     return p_value
 
+
 def diebold_mariano(returns, var_a, var_b):
     aligned = pd.concat([returns, var_a, var_b], axis=1).dropna()
     aligned.columns = ["ret", "var_a", "var_b"]
@@ -67,6 +70,7 @@ def diebold_mariano(returns, var_a, var_b):
     
     return dm_stat, p_value
 
+
 def kupiec_summary(viol_dict, alpha, market, level):
     rows = []
     for method, v in viol_dict.items():
@@ -82,6 +86,7 @@ def kupiec_summary(viol_dict, alpha, market, level):
             "Pass": "PASS" if p_val > 0.05 else "FAIL" if not np.isnan(p_val) else "—",
         })
     return pd.DataFrame(rows)
+
 
 def christoffersen_summary(viol_dict, market, level):
     rows = []
